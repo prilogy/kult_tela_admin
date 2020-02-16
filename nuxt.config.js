@@ -1,13 +1,18 @@
 import colors from 'vuetify/es5/util/colors'
 
+require('dotenv').config()
+
 export default {
   mode: 'spa',
+  env: {
+    API_URL: process.env.API_URL
+  },
   /*
   ** Headers of the page
   */
   head: {
     titleTemplate: '%s - ' + process.env.npm_package_name,
-    title: process.env.npm_package_name || '',
+    title: 'Панель управления Культ Тела',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -30,6 +35,13 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/axios.js',
+    '~/plugins/api.js',
+    '~/plugins/nuxt-client-init.client.js',
+    {
+      src: '~/plugins/socket-io.js',
+      ssr: false
+    }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -59,7 +71,6 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
       themes: {
         dark: {
           primary: colors.blue.darken2,
