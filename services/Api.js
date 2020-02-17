@@ -16,10 +16,6 @@ export default function (ctx) {
     getAll: () => axios.$get('/admin/roles')
   }
 
-  // this.Plans = {
-  //   getAll: () => axios.$get('/plan/all')
-  // }
-
   this.Top = {
     allTime: () => axios.$get('/top/all-time'),
     lastMonth: () => axios.$get('/top/last-month')
