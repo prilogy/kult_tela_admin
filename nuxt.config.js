@@ -29,12 +29,12 @@ export default {
   /*
   ** Global CSS
   */
-  css: [
-  ],
+  css: [],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '~/plugins/notifier.js',
     '~/plugins/axios.js',
     '~/plugins/api.js',
     '~/plugins/nuxt-client-init.client.js',
@@ -62,8 +62,7 @@ export default {
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
-  axios: {
-  },
+  axios: {},
   /*
   ** vuetify module configuration
   ** https://github.com/nuxt-community/vuetify-module
@@ -91,7 +90,7 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    extend(config, ctx) {
     }
   }
 }

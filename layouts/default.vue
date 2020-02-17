@@ -1,5 +1,6 @@
 <template>
-  <v-app>
+  <v-app style="margin-top: 56px">
+    <Notifier></Notifier>
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -17,7 +18,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-list-item
-          v-for="(item, i) in items"
+          v-for="(item, i) in CATEGORIES"
           :key="i"
           :to="item.to"
           router
@@ -33,15 +34,19 @@
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
-      :clipped-left="clipped"
+      elevate-on-scroll
+      dark
+      color="blue darken-2"
       fixed
-      app
-      color="blue lighten-2"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
 
       <v-toolbar-title v-text="title"/>
       <v-spacer/>
+      <p class="ma-0 mr-1">{{USER.first_name + ' ' + USER.last_name}}</p>
+      <v-btn @click="logOut" icon>
+        <v-icon>mdi-exit-to-app</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-content>
       <v-container>
@@ -59,7 +64,10 @@
 </template>
 
 <script>
+  import { Notifier } from '../components/'
+
   export default {
+    components: { Notifier },
     middleware: 'requireAuth',
     data() {
       return {
@@ -82,6 +90,21 @@
         right: true,
         rightDrawer: false,
         title: 'Vuetify.js'
+      }
+    },
+    computed: {
+      CATEGORIES() {
+        const admin_role_id = this.$store.state.user.user.admin_role_id
+        console.log(admin_role_id)
+        return this.$store.getters['nav/GET_CATEGORIES'].filter(e => !e.roles || e.roles.includes(admin_role_id))
+      },
+      USER() {
+        return this.$store.getters['user/GET_USER']
+      }
+    },
+    methods: {
+      logOut() {
+        this.$store.dispatch('auth/LOGOUT')
       }
     }
   }

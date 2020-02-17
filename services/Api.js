@@ -2,6 +2,7 @@ export default function (ctx) {
   const axios = ctx.$axios
 
   this.Auth = {
+    signUp: data => axios.$post('/admin/auth/signup', data),
     login: user => axios.$post('/auth', user), // user = { email, password }
     tokenAuth: () => axios.$get('/auth'), // headers must contain token
   }

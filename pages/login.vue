@@ -23,7 +23,7 @@
               <v-toolbar-title>{{signUp ? 'Регистрация' : 'Вход'}}</v-toolbar-title>
             </v-toolbar>
             <v-card-text>
-              <v-form ref="form" v-model="valid">
+              <v-form ref="form" v-model="valid" @submit="sendData">
                 <v-text-field
                   v-model="first_name"
                   label="Имя"
@@ -67,6 +67,8 @@
                   v-model="role"
                   :items="roles.map(e => e.name)"
                   filled
+                  required
+                  :rules="textRules"
                   label="Выберите должность"
                 ></v-select>
 
@@ -85,7 +87,9 @@
             <v-card-actions>
               <v-btn @click="switchWindow">{{signUp ? 'Войти' : 'Зарегистрироваться'}}</v-btn>
               <v-spacer/>
-              <v-btn :disabled="!valid" color="primary">{{signUp ? "Подтвердить регистрацию" : "Войти"}}</v-btn>
+              <v-btn @click="validateForm" :disabled="!valid" color="primary">{{signUp ? "Подтвердить регистрацию" :
+                "Войти"}}
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -120,7 +124,32 @@
       ]
     }),
     methods: {
-      //TODO: form req.body method
+      async sendData() {
+        let result
+
+        let data = {
+          email: this.email,
+          password: this.password
+        }
+        if (this.signUp) {
+          data.first_name = this.first_name
+          data.last_name = this.last_name
+          data.role_id = this.roles.filter(e => e.name === this.role)[0].value
+          data.secret = this.secret
+
+          result = await this.$api.Auth.signUp(data)
+          this.$notifier.showMessage({ message: result.data, type: 'success' })
+          this.switchWindow()
+        } else {
+          await this.$store.dispatch('auth/LOGIN', data)
+
+        }
+      },
+      validateForm() {
+        if (this.$refs.form.validate()) {
+          this.sendData()
+        }
+      },
       switchWindow() {
         this.signUp = !this.signUp
         if (this.signUp === true)
@@ -130,10 +159,9 @@
     async asyncData(ctx) {
       try {
         const { data: roles } = await ctx.app.$api.Roles.getAll()
-        console.log(roles)
         return { roles }
       } catch (e) {
-        //ctx.redirect('/login')
+        //TODO: create popup
       }
     }
   }
