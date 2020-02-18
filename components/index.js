@@ -1,4 +1,4 @@
-import Notifier from './Notifier'
+import Notifier from './ui/Notifier'
 
 export {
   Notifier

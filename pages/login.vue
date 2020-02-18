@@ -59,8 +59,10 @@
                   name="password"
                   :rules="passwordRules"
                   prepend-icon="mdi-lock"
-                  :type="signUp ? 'text' : 'password'"
                   required
+                  @click:append="showPassword = !showPassword"
+                  :type="showPassword ? 'text' : 'password'"
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 />
                 <v-select
                   v-if="signUp"
@@ -121,7 +123,8 @@
       ],
       textRules: [
         v => !!v || 'Поле обязательно'
-      ]
+      ],
+      showPassword: false
     }),
     methods: {
       async sendData() {

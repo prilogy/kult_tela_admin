@@ -25,13 +25,18 @@ export const actions = {
       if (result.success) {
         const { user, token } = result.data
 
-        commit('user/SET_USER', user, { root: true })
-        commit('SET_AUTHENTICATED')
-        commit('SET_TOKEN', token)
-        await $nuxt.$router.push('/')
-        window.location.reload(true)
+        if (typeof user.admin_role_id !== 'number') {
+          commit('popup/SET_ERROR', 'Пользователь не существует', { root: true })
+        } else if (typeof user.admin_role_id === 'number') {
+          commit('user/SET_USER', user, { root: true })
+          commit('SET_AUTHENTICATED')
+          commit('SET_TOKEN', token)
+          await $nuxt.$router.push('/')
+          window.location.reload(true)
+        }
       }
-    } catch (error) {}
+    } catch (error) {
+    }
   },
   async LOGOUT({ commit }) {
     await this.$router.push('/login')

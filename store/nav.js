@@ -10,7 +10,8 @@ export const state = () => ({
       id: 0,
       icon: 'mdi-forum',
       title: 'Сообщения',
-      to: '/messages'
+      to: '/messages',
+      nested: ['messages-id']
     },
     {
       id: 0,
@@ -29,5 +30,5 @@ export const actions = {}
 
 export const getters = {
   GET_CATEGORIES: state => state.categories
-  
+
 }

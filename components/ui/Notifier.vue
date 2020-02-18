@@ -8,9 +8,10 @@
     <v-btn
       dark
       text
+      icon
       @click="show = false"
     >
-      Закрыть
+      <v-icon>mdi-close</v-icon>
     </v-btn>
   </v-snackbar>
 </template>
