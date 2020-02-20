@@ -43,28 +43,34 @@
       color="blue darken-2"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
-      <v-btn class="mr-2" icon @click="$router.back()">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" class="mr-2" icon @click="$router.back()">
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
+        </template>
+        <span>Предыдущая страница</span>
+      </v-tooltip>
+
       <v-toolbar-title v-text="title"/>
       <v-spacer/>
       <v-toolbar-title class="body-2 mr-1" v-text="USER.first_name + ' ' + USER.last_name"/>
-      <v-btn @click="logOut" icon>
-        <v-icon>mdi-exit-to-app</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" @click="logOut" icon>
+            <v-icon>mdi-exit-to-app</v-icon>
+          </v-btn>
+        </template>
+        <span>Выйти из аккаунта</span>
+      </v-tooltip>
+
     </v-app-bar>
     <v-content>
-      <v-container fluid class="pa-0 pa-sm-2 pa-md-4">
+      <v-container fluid class="fill-height pa-0 pa-sm-2 pa-md-4">
         <nuxt/>
       </v-container>
     </v-content>
 
-    <v-footer
-      :fixed="fixed"
-      app
-    >
-      <span>&copy; {{ new Date().getFullYear() }} Культ Тела</span>
-    </v-footer>
   </v-app>
 </template>
 

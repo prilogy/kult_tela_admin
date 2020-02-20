@@ -1,7 +1,7 @@
 <template>
   <v-layout
     column
-    justify-center
+    justify-start
     align-center
   >
     <p class="grey--text" v-if="CHATS.length === 0">
