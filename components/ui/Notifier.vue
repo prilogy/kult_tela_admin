@@ -21,7 +21,7 @@
     data: () => ({
       show: false,
       message: '',
-      color: 'error'
+      color: null
     }),
     created() {
       this.$store.subscribe((mutation, state) => {
@@ -29,7 +29,7 @@
           const msg = mutation.type === 'popup/SET_ERROR' ? state.popup.error : state.popup.success
           if (msg) {
             this.message = msg
-            this.color = mutation.type === 'popup/SET_ERROR' ? 'error' : 'success'
+            this.color = this.color || mutation.type === 'popup/SET_ERROR' ? 'error' : 'success'
             this.show = true
           } else this.show = false
         }

@@ -25,6 +25,7 @@ const sockets = {
     if (messages && messages.length > 0) {
       let currentChat = state.currentChat
       currentChat.messages = [...messages, ...currentChat.messages]
+      dispatch('SET_CHAT', currentChat)
     }
   },
   chatMessagesHistoryFull({ dispatch, state }) {

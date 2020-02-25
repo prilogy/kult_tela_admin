@@ -4,7 +4,7 @@
     justify-start
     align-center
   >
-    <p class="grey--text" v-if="CHATS.length === 0">
+    <p class="grey--text mt-2" v-if="CHATS.length === 0">
       У вас пока нет чатов
     </p>
     <v-container fluid class="pa-0" v-else>

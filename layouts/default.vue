@@ -66,7 +66,7 @@
 
     </v-app-bar>
     <v-content>
-      <v-container fluid class="fill-height pa-0 pa-sm-2 pa-md-4">
+      <v-container fluid :class="{'fill-height': true, 'pa-0 pa-sm-2 pa-md-4': !noMargin, 'pa-0': noMargin}">
         <nuxt/>
       </v-container>
     </v-content>
@@ -100,6 +100,9 @@
       },
       USER() {
         return this.$store.getters['user/GET_USER']
+      },
+      noMargin() {
+        return ['messages-user_id', 'messages'].includes(this.$route.name)
       }
     },
     watch: {
@@ -109,7 +112,6 @@
     },
     methods: {
       setTitle() {
-        console.log(this.$route.name)
         let category = this.CATEGORIES.filter(e => e.to === this.$route.path)[0]
         if (!category)
           category = this.CATEGORIES.filter(e => e.nested && e.nested.includes(this.$route.name))[0]

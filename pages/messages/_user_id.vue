@@ -1,6 +1,6 @@
 <template>
   <v-layout column v-if="CHAT">
-    <v-toolbar flat color="blue">
+    <v-toolbar flat color="blue darken-3">
       <v-row class="px-2" align="center">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
@@ -23,7 +23,7 @@
     <v-container ref="messages" fluid class="chat-section pa-0 blue lighten-5 fill-height">
       <div class="chat-section__inner pa-2">
         <ul class="pa-0 col-12">
-          <li v-show="!CHAT.history_is_full">
+          <li>
             <v-row class="mb-2" justify="center">
               <v-btn @click="loadHistory" color="blue" class="white--text">
                 <v-icon class="mr-1">mdi-history</v-icon>
@@ -71,6 +71,7 @@
           text: this.message,
           to_user_id: this.CHAT.user_id
         })
+        this.message = ''
       },
       scrollTo({ height, toBottom }) {
         const el = this.$refs.messages
@@ -79,16 +80,18 @@
           : height
       },
       focusOnMessageInput() {
-        this.$refs.message_input.focus()
+        if (this.$refs.message_input)
+          this.$refs.message_input.focus()
       },
       loadHistory() {
         this.$store.dispatch('chat/LOAD_MESSAGES_HISTORY')
       },
       shouldScrollToBottom() {
         const el = this.$refs.messages
-        const msgs = el.childNodes[0].childNodes[0].clientHeight
-        const scrollTop = msgs.scrollTop + el.clientHeight + 48
-        return scrollTop >= msgs.clientHeight - 250
+        const msgs = el.childNodes[0].childNodes[0]
+
+        const scrollTop = this.$refs.messages.scrollTop + 640
+        return scrollTop >= msgs.clientHeight - 300
       }
     },
     computed: {
