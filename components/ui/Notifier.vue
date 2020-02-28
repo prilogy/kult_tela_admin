@@ -29,7 +29,7 @@
           const msg = mutation.type === 'popup/SET_ERROR' ? state.popup.error : state.popup.success
           if (msg) {
             this.message = msg
-            this.color = this.color || mutation.type === 'popup/SET_ERROR' ? 'error' : 'success'
+            this.color = (mutation.type === 'popup/SET_ERROR' ? 'error' : 'success')
             this.show = true
           } else this.show = false
         }

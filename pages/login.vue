@@ -141,7 +141,7 @@
           data.secret = this.secret
 
           result = await this.$api.Auth.signUp(data)
-          this.$notifier.showMessage({ message: result.data, type: 'success' })
+          this.$notifier.showMessage({ message: result.data, type: 'success', c })
           this.switchWindow()
         } else {
           await this.$store.dispatch('auth/LOGIN', data)
@@ -164,7 +164,7 @@
         const { data: roles } = await ctx.app.$api.Roles.getAll()
         return { roles }
       } catch (e) {
-        //TODO: create popup
+        this.$notifier.showMessage({ type: 'error', message: 'Ошибка загрузки данных' })
       }
     }
   }

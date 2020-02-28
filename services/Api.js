@@ -24,4 +24,10 @@ export default function (ctx) {
   this.Public = {
     getUserById: id => axios.$get('/public/user/' + id)
   }
+
+  this.Request = {
+    getAllPending: () => axios.$get('/admin/request'),
+    getAllHistory: () => axios.$get('/admin/request/history'),
+    setStatus: data => axios.$post('/admin/request', data)
+  }
 }
