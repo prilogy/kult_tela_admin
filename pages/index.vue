@@ -1,14 +1,8 @@
 <template>
   <v-layout
-    column
-    justify-center
-    align-center
+    class="fill-height"
   >
-    <v-flex
-      xs12
-      sm8
-      md6
-    >
+    <v-col>
       <v-card>
         <v-card-title class="headline">
           Добро пожаловать в панель управления Культ-Тела!
@@ -17,7 +11,8 @@
           <p>В меню слева вы можете найти все доступные вам разделы администрирования.</p>
         </v-card-text>
       </v-card>
-    </v-flex>
+    </v-col>
+
   </v-layout>
 </template>
 

@@ -1,21 +1,54 @@
 <template>
-  <v-row justify="start" class="fill-height ma-0">
-    <v-col xs="12" sm="auto" align-self="start" class="grey lighten-3 mt-n2 ml-n2 pa-2">
-      <v-avatar size="164" height="100%" tile>
-        <img alt="avatar" :src="user.avatar_src"/>
-      </v-avatar>
+  <v-row justify="start" class="flex-wrap ma-0 pa-4">
+    <v-col sm="auto" align-self="start" class="pa-0 mb-4 col-12 col-sm-5 col-md-4 col-lg-3">
+      <v-img style="margin: 0 auto" alt="avatar" :src="user.avatar_src"/>
       <v-col class="pa-0 ml-0 mt-4">
-        <p>{{user.name}}</p>
-        <ul class="list">
+        <p class="title">{{user.name}}</p>
+        <ul class="list mt-2">
           <li v-for="item in userInfo">
             <p><span class="font-weight-medium">{{item.title}}</span> {{item.value}}</p>
           </li>
         </ul>
       </v-col>
-      <v-btn :to="'/messages/' + this.user.id" dark color="blue" class="mt-2">Написать сообщение
+      <v-btn block :to="'/messages/' + this.user.id" dark color="blue" class="mt-2">Написать сообщение
       </v-btn>
     </v-col>
-    <v-col>ДАННЫЕ</v-col>
+    <div class="ml-sm-4 grid-wrapper">
+      <div class="cards-grid">
+        <v-card
+        >
+          <v-card-text class="">
+            <div class="title font-weight-medium mb-2">Вес</div>
+            <v-sheet
+              color="cyan"
+            >
+              <v-sparkline
+                :value="weightHistory.values"
+                :labels="weightHistory.values"
+                label-size="14"
+                color="white"
+                line-width="2"
+                padding="16"
+              ></v-sparkline>
+            </v-sheet>
+            <v-row class="ma-0 mt-1" justify="space-between">
+              <p>При регистрации</p>
+              <p>Сейчас</p>
+            </v-row>
+            <v-divider class="my-2"></v-divider>
+            <v-icon
+              class="mr-2"
+              small
+            >
+              mdi-clock
+            </v-icon>
+            <span class="caption grey--text font-weight-light">Последнее обновление <span
+              class="black--text font-weight-regular">{{user.weight_history[user.weight_history.length - 1].date}}</span></span>
+          </v-card-text>
+        </v-card>
+      </div>
+    </div>
+
   </v-row>
 </template>
 
@@ -28,6 +61,15 @@
     },
     methods: {},
     computed: {
+      weightHistory() {
+
+        if (this.user) {
+          let values = this.user.weight_history.map(e => e.weight)
+          if (values.length === 1)
+            values.push(values[0])
+          return { values }
+        }
+      },
       userInfo() {
         const user = this.user
         if (user) {
@@ -65,6 +107,16 @@
 </script>
 
 <style scoped>
+  .grid-wrapper {
+    flex: 1 0 auto;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 10px;
+  }
+
   p {
     margin: 0;
   }

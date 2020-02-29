@@ -1,5 +1,5 @@
 <template>
-  <v-layout column v-if="CHAT">
+  <v-layout class="fill-height" column v-if="CHAT">
     <v-toolbar flat color="blue darken-3">
       <v-row class="px-2" align="center">
         <v-tooltip top>
@@ -15,7 +15,7 @@
           <p class="mb-0 white--text">{{CHAT.user.name}}</p>
           <p style="opacity: 0.7"
              :class="{'mb-0':true, 'body-2':true, 'white--text': !CHAT.user.status, 'green--text': CHAT.user.status}">
-            {{CHAT.user.status ? 'Онлайн' : 'Не в сети'}}</p>
+            {{CHAT.user_status ? 'Онлайн' : 'Не в сети'}}</p>
         </v-col>
       </v-row>
     </v-toolbar>
@@ -51,7 +51,7 @@
         </v-btn>
       </v-row>
     </v-container>
-  </v-layout>
+  </v-layout column>
 </template>
 
 <script>
