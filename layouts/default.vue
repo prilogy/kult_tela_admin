@@ -66,7 +66,7 @@
 
     </v-app-bar>
     <v-content>
-      <v-container fluid :class="{'fill-height': true, 'pa-0 pa-sm-2 pa-md-4': !noMargin, 'pa-0': noMargin}">
+      <v-container fluid :class="{'fill-height': true, 'pa-sm-2 pa-md-4': !noMargin, 'pa-0': noMargin}">
         <nuxt/>
       </v-container>
     </v-content>

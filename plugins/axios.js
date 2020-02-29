@@ -10,6 +10,7 @@ export default function ({ $axios, store, error, $notifier, app }) {
         statusCode: 501,
         message: 'Ведутся технические работы, попробуйте заново позднее'
       })
+      console.log(app.$notifier)
       app.$notifier.showMessage({ message: 'Отсутствует подключение к серверу', type: 'error' })
     } else app.$notifier.showMessage({ message: err.response.data.error, type: 'error' })
   })

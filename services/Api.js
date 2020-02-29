@@ -22,7 +22,7 @@ export default function (ctx) {
   }
 
   this.Public = {
-    getUserById: id => axios.$get('/public/user/' + id)
+    getUserById: id => axios.$get('/admin/public/user/' + id)
   }
 
   this.Request = {

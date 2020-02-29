@@ -5,7 +5,7 @@
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-list-item-avatar v-on="on" class="mr-0 user-avatar">
-              <v-img :src="CHAT.user.avatar_src"></v-img>
+              <v-img @click="$router.push('/public/user/' + CHAT.user.id)" :src="CHAT.user.avatar_src"></v-img>
             </v-list-item-avatar>
           </template>
           <span>Перейти в профиль</span>
