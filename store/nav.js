@@ -20,13 +20,13 @@ export const state = () => ({
       to: '/requests',
       roles: [0]
     },
-    {
+    /*{
       id: 0,
       icon: 'mdi-account-group',
       title: 'Мои ученики',
       to: '/students',
       roles: [2]
-    }
+    }*/
   ]
 })
 

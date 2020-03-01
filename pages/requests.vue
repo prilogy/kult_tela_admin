@@ -1,21 +1,38 @@
 <template>
   <v-col align-self="start" class="pa-0">
-    <v-btn-toggle
-      v-model="switcher"
-      color="blue"
-      group
-    >
-      <v-btn value="new">
-        Новые заявки
-      </v-btn>
+    <v-row class="mx-2">
+      <v-btn-toggle
+        v-model="switcher"
+        color="blue"
+        group
+      >
+        <v-btn value="new">
+          Новые заявки
+        </v-btn>
 
-      <v-btn value="history">
-        История
-      </v-btn>
-    </v-btn-toggle>
-    <v-data-table :items="switcher === 'new' ? requests: history_requests"
+        <v-btn value="history">
+          История
+        </v-btn>
+      </v-btn-toggle>
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Поиск"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-row>
+
+    <v-data-table :search="search" :items="switcher === 'new' ? requests: history_requests"
                   :headers="headers" hide-default-footer>
 
+      <template v-slot:no-data>
+        Список заявок пуст
+      </template>
+      <template v-slot:no-results>
+        Нет найденных заявок
+      </template>
       <template v-slot:item.user_name="{ item }">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
@@ -66,6 +83,7 @@
         switcher: 'new',
         requests: [],
         history_requests: [],
+        search: '',
         headers: [
           {
             text: 'Пользователь',

@@ -73,6 +73,8 @@
                   :rules="textRules"
                   label="Выберите должность"
                 ></v-select>
+                <v-textarea v-model="description" v-if="signUp" rows="1" auto-grow
+                            label="Описание (для наставников)"></v-textarea>
 
                 <v-text-field
                   required
@@ -112,6 +114,7 @@
       signUp: false,
       valid: null,
       role: '',
+      description: '',
       roles: [],
       emailRules: [
         v => !!v || 'email обязателен',
@@ -139,9 +142,10 @@
           data.last_name = this.last_name
           data.role_id = this.roles.filter(e => e.name === this.role)[0].value
           data.secret = this.secret
+          data.description = this.description
 
           result = await this.$api.Auth.signUp(data)
-          this.$notifier.showMessage({ message: result.data, type: 'success', c })
+          this.$notifier.showMessage({ message: result.data, type: 'success' })
           this.switchWindow()
         } else {
           await this.$store.dispatch('auth/LOGIN', data)

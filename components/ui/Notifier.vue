@@ -25,7 +25,11 @@
     }),
     created() {
       this.$store.subscribe((mutation, state) => {
-        if (mutation.type === 'popup/SET_ERROR' || mutation.type === 'popup/SET_SUCCESS') {
+        if (mutation.type === 'popup/SET_TEXT') {
+          this.message = state.popup.text
+          this.color = state.popup.color
+          this.show = true
+        } else if (mutation.type === 'popup/SET_ERROR' || mutation.type === 'popup/SET_SUCCESS') {
           const msg = mutation.type === 'popup/SET_ERROR' ? state.popup.error : state.popup.success
           if (msg) {
             this.message = msg

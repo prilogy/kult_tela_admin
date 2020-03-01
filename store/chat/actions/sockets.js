@@ -8,18 +8,33 @@ const sockets = {
       currentChat = true
 
       chat = state.currentChat
-      chat.messages.push(message)
+      if (chat) {
+        if (chat.messages.length > 0) chat.messages.push(message)
+        else chat.messages = [message]
+      }
     } else {
       const index = getChatIndexById(state.chats, { id: message.room_id })
       chat = state.chats[index]
-      chat.messages.push(message)
+      if (chat) {
+        if (chat.messages.length > 0) chat.messages.push(message)
+        else chat.messages = [message]
+      }
     }
-    await commit(currentChat ? 'SET_CURRENT_CHAT' : 'SET_CHAT', chat)
-    dispatch('SET_LAST_SEEN_MESSAGE')
+    if (chat) {
+      await commit(currentChat ? 'SET_CURRENT_CHAT' : 'SET_CHAT', chat)
+      dispatch('SET_LAST_SEEN_MESSAGE')
+    }
+    const myId = this.app.store.getters['user/GET_USER'].id
+    const user_id = this.app.router.history.current.params.user_id
+    if (myId !== message.user_id && user_id != message.user_id)
+      dispatch('popup/SET_POPUP', { text: 'У вас новое сообщение', color: 'warning' }, { root: true })
   },
   async chatMessageInit({ commit, dispatch }, message) {
     await dispatch('FEED_CHAT_WITH_USER_ID', { id: message.user_id })
     dispatch('SET_LAST_SEEN_MESSAGE')
+    const user_id = this.app.router.history.current.params.user_id
+    if (user_id != message.user_id)
+      dispatch('popup/SET_POPUP', { text: 'У вас новое сообщение', color: 'warning' }, { root: true })
   },
   async chatMessagesHistoryLoad({ commit, dispatch, state }, messages) {
     if (messages && messages.length > 0) {
