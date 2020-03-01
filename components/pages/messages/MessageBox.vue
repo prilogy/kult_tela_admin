@@ -33,6 +33,7 @@
     width: fit-content;
     max-width: 77%;
     box-shadow: 0 1px 3px #15314D33;
+    word-break: break-word;
 
     background: white;
   }

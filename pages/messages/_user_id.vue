@@ -23,8 +23,8 @@
     <v-container ref="messages" fluid class="chat-section pa-0 blue lighten-5 fill-height">
       <div class="chat-section__inner pa-2">
         <ul class="pa-0 col-12">
-          <li>
-            <v-row class="mb-2" justify="center">
+          <li v-show="!history_is_full">
+            <v-row class="mb-2 mx-0 px-0" justify="center">
               <v-btn @click="loadHistory" color="blue" class="white--text">
                 <v-icon class="mr-1">mdi-history</v-icon>
                 Загрузить историю
@@ -36,7 +36,6 @@
             <li>
               <MessageBox :message="message"></MessageBox>
             </li>
-
           </template>
         </ul>
       </div>
@@ -62,7 +61,8 @@
     components: { MessageBox },
     data() {
       return {
-        message: ''
+        message: '',
+        history_is_full: false
       }
     },
     methods: {
@@ -84,7 +84,10 @@
           this.$refs.message_input.focus()
       },
       loadHistory() {
-        this.$store.dispatch('chat/LOAD_MESSAGES_HISTORY')
+        if (this.CHAT.history_is_full)
+          this.history_is_full = true
+        if (!this.CHAT.history_is_full)
+          this.$store.dispatch('chat/LOAD_MESSAGES_HISTORY')
       },
       shouldScrollToBottom() {
         const el = this.$refs.messages
@@ -122,6 +125,8 @@
       CHAT: {
         deep: true,
         handler() {
+          if (this.CHAT.history_is_full)
+            this.history_is_full = true
           this.$nextTick(() => {
             if (this.shouldScrollToBottom())
               this.scrollTo({ toBottom: true })

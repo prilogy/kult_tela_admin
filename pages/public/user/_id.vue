@@ -1,51 +1,26 @@
 <template>
   <v-row justify="start" class="flex-wrap ma-0 pa-4">
     <v-col sm="auto" align-self="start" class="pa-0 mb-4 col-12 col-sm-5 col-md-4 col-lg-3">
-      <v-img style="margin: 0 auto" alt="avatar" :src="user.avatar_src"/>
-      <v-col class="pa-0 ml-0 mt-4">
-        <p class="title">{{user.name}}</p>
-        <ul class="list mt-2">
-          <li v-for="item in userInfo">
-            <p><span class="font-weight-medium">{{item.title}}</span> {{item.value}}</p>
-          </li>
-        </ul>
-      </v-col>
+      <v-img style="margin: 0 auto; border-radius: 4px" alt="avatar" :src="user.avatar_src"/>
+      <p class="title my-2">{{user.name}}</p>
+      <v-simple-table dense>
+        <template v-slot:default>
+          <tbody>
+          <tr v-for="item in userInfo">
+            <td class="py-2 font-">{{item.title}}</td>
+            <td class="py-1 font-weight-medium">{{item.value}}</td>
+          </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
       <v-btn block :to="'/messages/' + this.user.id" dark color="blue" class="mt-2">Написать сообщение
       </v-btn>
     </v-col>
-    <div class="ml-sm-4 grid-wrapper">
+    <div class="ml-sm-3 grid-wrapper">
       <div class="cards-grid">
-        <v-card
-        >
-          <v-card-text class="">
-            <div class="title font-weight-medium mb-2">Вес</div>
-            <v-sheet
-              color="cyan"
-            >
-              <v-sparkline
-                :value="weightHistory.values"
-                :labels="weightHistory.values"
-                label-size="14"
-                color="white"
-                line-width="2"
-                padding="16"
-              ></v-sparkline>
-            </v-sheet>
-            <v-row class="ma-0 mt-1" justify="space-between">
-              <p>При регистрации</p>
-              <p>Сейчас</p>
-            </v-row>
-            <v-divider class="my-2"></v-divider>
-            <v-icon
-              class="mr-2"
-              small
-            >
-              mdi-clock
-            </v-icon>
-            <span class="caption grey--text font-weight-light">Последнее обновление <span
-              class="black--text font-weight-regular">{{user.weight_history[user.weight_history.length - 1].date}}</span></span>
-          </v-card-text>
-        </v-card>
+        <WeightHistory :user="user"></WeightHistory>
+        <FoodReports :user="user"></FoodReports>
+        <WorkoutInfo :user="user"></WorkoutInfo>
       </div>
     </div>
 
@@ -53,7 +28,10 @@
 </template>
 
 <script>
+  import { WeightHistory, FoodReports, WorkoutInfo } from '../../../components/pages/public/user'
+
   export default {
+    components: { FoodReports, WeightHistory, WorkoutInfo },
     data() {
       return {
         user: null
@@ -61,15 +39,6 @@
     },
     methods: {},
     computed: {
-      weightHistory() {
-
-        if (this.user) {
-          let values = this.user.weight_history.map(e => e.weight)
-          if (values.length === 1)
-            values.push(values[0])
-          return { values }
-        }
-      },
       userInfo() {
         const user = this.user
         if (user) {
@@ -109,6 +78,7 @@
 <style scoped>
   .grid-wrapper {
     flex: 1 0 auto;
+    max-width: 100%;
   }
 
   .cards-grid {
