@@ -3,20 +3,24 @@
   >
     <v-card-text>
       <div class="title font-weight-medium mb-2">Физические данные</div>
-      <p class="black--text subtitle ma-0 font-weight-medium">Уровни</p>
-      <v-simple-table dense>
-        <template v-slot:default>
-          <tbody>
-          <tr v-for="item in workoutLevels">
-            <td class="py-2 font-">{{item.title}}</td>
-            <td class="py-1 font-weight-medium">{{item.value}}</td>
-          </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
-      <v-divider class="my-2"></v-divider>
-      <span class="caption grey--text">Тренировочный план начат <span
-        class="black--text">{{workout.start_date}}</span></span>
+      <div v-if="user.workout && user.workout.start_date">
+        <p class="black--text subtitle ma-0 font-weight-medium">Уровни</p>
+        <v-simple-table dense>
+          <template v-slot:default>
+            <tbody>
+            <tr v-for="item in workoutLevels">
+              <td class="py-2 font-">{{item.title}}</td>
+              <td class="py-1 font-weight-medium">{{item.value}}</td>
+            </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+        <v-divider class="my-2"></v-divider>
+        <span class="caption grey--text">Тренировочный план начат <span
+          class="black--text">{{user.workout_start_date}}</span></span>
+      </div>
+      <p v-else class="black--text subtitle ma-0 font-weight-medium">Персональные тренировки не доступны у этого
+        пользователя</p>
     </v-card-text>
   </v-card>
 </template>

@@ -1,17 +1,19 @@
 <template>
   <v-list-item
-    @click="$router.push('/messages/'+chat.user_id)"
-    :key="chat.user.name"
+    :to="'/messages/'+chat.user_id"
     :class="{'blue lighten-4': chat.messages[chat.messages.length - 1].user_id !== $store.getters['user/GET_USER'].id && chat.last_seen_message_id < chat.messages[chat.messages.length - 1].id}"
   >
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-list-item-avatar v-on="on" class="mr-0 user-avatar">
-          <v-img @click="$router.push('/public/user/' + chat.user.id)" :src="chat.user.avatar_src"></v-img>
-        </v-list-item-avatar>
+        <nuxt-link :to="'/public/user/' + chat.user.id">
+          <v-list-item-avatar v-on="on" class="mr-0 user-avatar">
+            <v-img :src="chat.user.avatar_src"></v-img>
+          </v-list-item-avatar>
+        </nuxt-link>
       </template>
       <span>Перейти в профиль</span>
     </v-tooltip>
+
 
     <v-list-item-content>
       <v-layout>

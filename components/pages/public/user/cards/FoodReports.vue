@@ -25,7 +25,6 @@
           </tbody>
         </template>
       </v-simple-table>
-      <v-btn block elevation="0" color="grey lighten-3" small>Загрузить ещё</v-btn>
       <v-divider class="my-2"></v-divider>
       <span v-if="user.food_reports"
             class="caption grey--text">Последние {{user.food_reports.length}} отчета(-ов)</span>
