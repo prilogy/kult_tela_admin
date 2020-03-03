@@ -17,7 +17,7 @@
         </v-simple-table>
         <v-divider class="my-2"></v-divider>
         <span class="caption grey--text">Тренировочный план начат <span
-          class="black--text">{{user.workout_start_date}}</span></span>
+          class="black--text">{{user.workout.start_date}}</span></span>
       </div>
       <p v-else class="black--text subtitle ma-0 font-weight-medium">Персональные тренировки не доступны у этого
         пользователя</p>
