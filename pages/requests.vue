@@ -60,7 +60,7 @@
 
       <template v-slot:item.action="{ item }">
         <template v-if="switcher === 'new'">
-          <v-icon color="success" :disabled="item.payment_status !== 'succeeded'"
+          <v-icon color="success" :disabled=" !['succeeded', 'free'].includes(item.payment_status)"
                   @click="setStatus(item, 1)">mdi-check
           </v-icon>
           <v-icon color="error" :disabled="item.payment_status !== 'canceled'" @click="setStatus(item, -1)">
@@ -152,14 +152,16 @@
           const formats = {
             'pending': 'Ожидание',
             'succeeded': 'Оплачен',
-            'canceled': 'Отменен'
+            'canceled': 'Отменен',
+            'free': 'Бесплатно'
           }
           return formats[v] || 'Ожидание'
         } else {
           const colors = {
             'pending': 'warning',
             'succeeded': 'success',
-            'canceled': 'error'
+            'canceled': 'error',
+            'free': 'success'
           }
           return colors[v] || 'warning'
         }
