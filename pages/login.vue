@@ -73,6 +73,10 @@
                   :rules="textRules"
                   label="Выберите должность"
                 ></v-select>
+                <v-file-input v-model="avatar_src" v-if="signUp" accept="image/*"
+                              prepend-icon="mdi-camera"
+                              label="Аватар"
+                              placeholder="Загрузите фото"></v-file-input>
                 <v-textarea v-model="description" v-if="signUp" rows="1" auto-grow
                             label="Описание (для наставников)"></v-textarea>
 
@@ -115,6 +119,7 @@
       valid: null,
       role: '',
       description: '',
+      avatar_src: null,
       roles: [],
       emailRules: [
         v => !!v || 'email обязателен',
@@ -131,6 +136,7 @@
     }),
     methods: {
       async sendData() {
+
         let result
 
         let data = {
@@ -138,18 +144,26 @@
           password: this.password
         }
         if (this.signUp) {
+          console.log('asdas')
           data.first_name = this.first_name
           data.last_name = this.last_name
           data.role_id = this.roles.filter(e => e.name === this.role)[0].value
           data.secret = this.secret
           data.description = this.description
 
-          result = await this.$api.Auth.signUp(data)
+          const form = new FormData()
+          Object.keys(data).forEach(key => {
+            form.append(key, data[key])
+          })
+          form.append('avatar_src', this.avatar_src)
+
+          console.log(form)
+
+          result = await this.$api.Auth.signUp(form)
           this.$notifier.showMessage({ message: result.data, type: 'success' })
           this.switchWindow()
         } else {
           await this.$store.dispatch('auth/LOGIN', data)
-
         }
       },
       validateForm() {
