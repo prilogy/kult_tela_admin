@@ -1,21 +1,21 @@
 <template>
-  <v-layout class="fill-height" column v-if="CHAT">
+  <v-layout class="fill-height" column v-if="CHAT && chatf && user">
     <v-toolbar flat color="blue darken-3">
       <v-row class="px-2" align="center">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-list-item-avatar v-on="on" class="mr-0 user-avatar">
-              <v-img @click="$router.push('/public/user/' + CHAT.user.id)" :src="CHAT.user.avatar_src"></v-img>
+              <v-img @click="$router.push('/public/user/' + user.id)" :src="chatf.avatar.src"></v-img>
             </v-list-item-avatar>
           </template>
           <span>Перейти в профиль</span>
         </v-tooltip>
 
         <v-col>
-          <p class="mb-0 white--text">{{CHAT.user.name}}</p>
+          <p class="mb-0 white--text">{{user.name}}</p>
           <p style="opacity: 0.7"
-             :class="{'mb-0':true, 'body-2':true, 'white--text': !CHAT.user.status, 'green--text': CHAT.user.status}">
-            {{CHAT.user_status ? 'Онлайн' : 'Не в сети'}}</p>
+             :class="{'mb-0':true, 'body-2':true, 'white--text': true}">
+            {{user.status ? 'Онлайн' : 'Не в сети'}}</p>
         </v-col>
       </v-row>
     </v-toolbar>
@@ -69,7 +69,8 @@
       sendMessage() {
         this.$store.dispatch('chat/SEND_MESSAGE', {
           text: this.message,
-          to_user_id: this.CHAT.user_id
+          to_user_id: this.user ? this.user.id : null,
+          room_id: this.CHAT.id,
         })
         this.message = ''
       },
@@ -98,6 +99,56 @@
       }
     },
     computed: {
+      chatf() {
+        const chat = this.CHAT
+
+        const currentUserId = this.$store.getters['user/GET_USER'].id
+        const user =
+          chat &&
+          chat.users.filter(
+            e => e.id !== currentUserId
+          )[0]
+
+        const lastMessage =
+          chat.messages && chat.messages.length > 0
+            ? chat.messages[chat.messages.length - 1]
+            : null
+
+        return {
+          avatar: {
+            src: chat.conversation
+              ? chat.image_src || null
+              : user
+                ? user.avatar_src
+                : null
+          },
+          name: chat.name || user.name,
+          date: lastMessage ? lastMessage.date : null,
+          lastMessageText: lastMessage
+            ? (lastMessage.user_id === currentUserId
+            ? 'Вы: '
+            : chat.conversation
+              ? chat.users.filter(e => e.id === lastMessage.user_id)[0].name +
+              ': '
+              : '') + lastMessage.text
+            : 'Нет сообщений',
+          lastMessage,
+          currentUserId,
+          showUnreadMessages:
+            (user &&
+              lastMessage &&
+              lastMessage.user_id !== currentUserId &&
+              chat.last_seen_message_id !== lastMessage.id) ||
+            null
+        }
+      },
+      user() {
+        return this.CHAT.conversation
+          ? null
+          : this.CHAT.users.filter(
+            e => e.id !== this.$store.getters['user/GET_USER'].id
+          )[0]
+      },
       ...mapGetters({
         CHAT: 'chat/GET_CURRENT_CHAT',
         ME: 'user/GET_USER'

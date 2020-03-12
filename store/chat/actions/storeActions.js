@@ -15,7 +15,6 @@ const storeActions = {
   },
   async FEED_CHATS({ commit }) {
     try {
-      console.log('feeding')
       const { data: chats } = await this.$api.Chat.getAll()
       commit('SET_CHATS', chats)
     } catch (e) {
@@ -41,7 +40,9 @@ const storeActions = {
   SEND_MESSAGE({ commit }, data) {
     socket(this).emit('chat_message', {
       text: data.text,
-      to_user_id: data.to_user_id
+      to_user_id: data.to_user_id,
+      room_id: data.room_id,
+      attachments: null
     })
   },
   async SET_LAST_SEEN_MESSAGE({ state, rootState }) {
