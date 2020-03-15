@@ -4,9 +4,11 @@
       <v-row class="px-2" align="center">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-list-item-avatar v-on="on" class="mr-0 user-avatar">
-              <v-img @click="$router.push('/public/user/' + user.id)" :src="chatf.avatar_src || '/v.png'"></v-img>
-            </v-list-item-avatar>
+            <nuxt-link :to="!CHAT.conversation ? '/public/user/' + user.id : ''">
+              <v-list-item-avatar v-on="!CHAT.conversation ? on : ''" class="mr-0 user-avatar">
+                <v-img :src="chatf.avatar_src || '/v.png'"></v-img>
+              </v-list-item-avatar>
+            </nuxt-link>
           </template>
           <span>Перейти в профиль</span>
         </v-tooltip>

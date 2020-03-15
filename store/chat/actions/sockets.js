@@ -26,8 +26,13 @@ const sockets = {
     }
     const myId = this.app.store.getters['user/GET_USER'].id
     const user_id = this.app.router.history.current.params.user_id
-    if (myId !== message.user_id && user_id != message.user_id)
-      dispatch('popup/SET_POPUP', { text: 'У вас новое сообщение', color: 'warning' }, { root: true })
+    console.log('c' + user_id, 'c' + message.room_id)
+    if (myId !== message.user_id && user_id !== message.user_id) {
+      console.log(user_id, 'c' + message.room_id)
+      if (user_id != 'c' + message.room_id)
+        dispatch('popup/SET_POPUP', { text: 'У вас новое сообщение', color: 'warning' }, { root: true })
+    }
+
   },
   async chatMessageInit({ commit, dispatch }, message) {
     await dispatch('FEED_CHAT_WITH_USER_ID', { id: message.user_id })
