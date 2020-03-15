@@ -1,21 +1,21 @@
 <template>
-  <v-layout class="fill-height" column v-if="CHAT && chatf && user">
+  <v-layout class="fill-height" column v-if="CHAT && chatf">
     <v-toolbar flat color="blue darken-3">
       <v-row class="px-2" align="center">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-list-item-avatar v-on="on" class="mr-0 user-avatar">
-              <v-img @click="$router.push('/public/user/' + user.id)" :src="chatf.avatar.src"></v-img>
+              <v-img @click="$router.push('/public/user/' + user.id)" :src="chatf.avatar_src || '/v.png'"></v-img>
             </v-list-item-avatar>
           </template>
           <span>Перейти в профиль</span>
         </v-tooltip>
 
         <v-col>
-          <p class="mb-0 white--text">{{user.name}}</p>
+          <p class="mb-0 white--text">{{chatf.name}}</p>
           <p style="opacity: 0.7"
              :class="{'mb-0':true, 'body-2':true, 'white--text': true}">
-            {{user.status ? 'Онлайн' : 'Не в сети'}}</p>
+            {{chatf.status.text }}</p>
         </v-col>
       </v-row>
     </v-toolbar>
@@ -34,7 +34,9 @@
           </li>
           <template v-for="message in CHAT.messages">
             <li>
-              <MessageBox :message="message"></MessageBox>
+              <MessageBox :user="CHAT.users.filter(e => e.id === message.user_id)[0]"
+                          :conversation="CHAT.conversation || false" :message="message">
+              </MessageBox>
             </li>
           </template>
         </ul>
@@ -50,7 +52,7 @@
         </v-btn>
       </v-row>
     </v-container>
-  </v-layout column>
+  </v-layout>
 </template>
 
 <script>
@@ -101,53 +103,30 @@
     computed: {
       chatf() {
         const chat = this.CHAT
-
-        const currentUserId = this.$store.getters['user/GET_USER'].id
-        const user =
-          chat &&
-          chat.users.filter(
-            e => e.id !== currentUserId
-          )[0]
-
-        const lastMessage =
-          chat.messages && chat.messages.length > 0
-            ? chat.messages[chat.messages.length - 1]
-            : null
-
+        const user = this.user
         return {
-          avatar: {
-            src: chat.conversation
-              ? chat.image_src || null
-              : user
-                ? user.avatar_src
-                : null
-          },
           name: chat.name || user.name,
-          date: lastMessage ? lastMessage.date : null,
-          lastMessageText: lastMessage
-            ? (lastMessage.user_id === currentUserId
-            ? 'Вы: '
+          avatar_src: user
+            ? user.avatar_src
             : chat.conversation
-              ? chat.users.filter(e => e.id === lastMessage.user_id)[0].name +
-              ': '
-              : '') + lastMessage.text
-            : 'Нет сообщений',
-          lastMessage,
-          currentUserId,
-          showUnreadMessages:
-            (user &&
-              lastMessage &&
-              lastMessage.user_id !== currentUserId &&
-              chat.last_seen_message_id !== lastMessage.id) ||
-            null
+              ? chat.image_src || null
+              : null,
+          status: {
+            text: user
+              ? user.status
+                ? 'онлайн'
+                : 'не в сети'
+              : chat.conversation
+                ? chat.user_ids.length + ' участников'
+                : '',
+            bool: user ? user.status : false
+          }
         }
       },
       user() {
-        return this.CHAT.conversation
-          ? null
-          : this.CHAT.users.filter(
-            e => e.id !== this.$store.getters['user/GET_USER'].id
-          )[0]
+        return this.CHAT && !this.CHAT.conversation
+          ? this.CHAT.users.filter(e => e.id !== this.ME.id)[0]
+          : null
       },
       ...mapGetters({
         CHAT: 'chat/GET_CURRENT_CHAT',
@@ -155,7 +134,14 @@
       })
     },
     async fetch({ store, params, redirect }) {
-      const user_id = parseInt(params.user_id)
+      let user_id = params.user_id,
+        conversation = false
+
+      if (user_id.toString().indexOf('c') !== -1) {
+        user_id = parseInt(user_id.slice(1))
+        conversation = true
+      } else user_id = parseInt(user_id)
+
       const index = store.state.chat.chats
         .map(item => item.user_id)
         .indexOf(user_id)
@@ -163,10 +149,18 @@
         if (index === -1 || store.state.chat.chats[index].messages.length <= 20) {
           await store.dispatch('chat/FEED_CHAT_WITH_USER_ID', {
             id: user_id,
-            setAsCurrent: true
+            setAsCurrent: true,
+            conversation
           })
         } else {
-          await store.dispatch('chat/SET_CURRENT_CHAT_FROM_CHATS', user_id)
+          let id
+          if (conversation) id = user_id
+          else {
+            id = this.$store.getters['chat/GET_CHATS'].filter(
+              e => e.user_ids.includes(user_id) && e.user_ids.length === 2
+            )[0].id
+          }
+          await store.dispatch('chat/SET_CURRENT_CHAT_FROM_CHATS', id)
         }
       } catch (e) {
         redirect('/messages')
@@ -186,6 +180,8 @@
       }
     },
     async mounted() {
+      if (this.CHAT && this.CHAT.history_is_full)
+        this.history_is_full = true
       this.$nextTick(() => {
         this.scrollTo({ toBottom: true })
       })
@@ -195,8 +191,6 @@
       await this.$store.dispatch('chat/SET_LAST_SEEN_MESSAGE')
     },
     destroyed() {
-      document.removeEventListener('keypress', () => {
-      })
       this.$store.dispatch('chat/RETURN_CURRENT_CHAT')
     }
   }

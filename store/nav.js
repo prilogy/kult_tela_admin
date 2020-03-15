@@ -7,19 +7,26 @@ export const state = () => ({
       to: '/'
     },
     {
-      id: 0,
+      id: 1,
       icon: 'mdi-forum',
       title: 'Сообщения',
       to: '/messages',
       nested: ['messages-id']
     },
     {
-      id: 0,
+      id: 2,
       icon: 'mdi-format-float-left',
       title: 'Заявки',
       to: '/requests',
       roles: [0]
     },
+    {
+      id: 3,
+      icon: 'mdi-chart-timeline-variant',
+      title: 'Статистика',
+      to: '/statistics',
+      roles: [0]
+    }
     /*{
       id: 0,
       icon: 'mdi-account-group',

@@ -1,14 +1,14 @@
 <template>
   <v-list-item
-    v-if="user && chatf"
-    :to="'/messages/'+user.id"
+    v-if="chatf"
+    :to="link"
     :class="{'blue lighten-4': chatf.lastMessage.user_id !== chatf.currentUserId && chat.last_seen_message_id < chatf.lastMessage.id}"
   >
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <nuxt-link :to="'/public/user/' + user.id">
-          <v-list-item-avatar v-on="on" class="mr-0 user-avatar">
-            <v-img :src="chatf.avatar.src"></v-img>
+        <nuxt-link :to="user ? '/public/user/' + user.id : ''">
+          <v-list-item-avatar v-on="chatf.avatar.src ? on : ''" class="mr-0 user-avatar">
+            <v-img :src="chatf.avatar.src || 'v.png'"></v-img>
           </v-list-item-avatar>
         </nuxt-link>
       </template>
@@ -19,9 +19,9 @@
     <v-list-item-content>
       <v-layout>
         <v-col class="pa-0 ml-3">
-          <v-list-item-title v-text="user.name"></v-list-item-title>
+          <v-list-item-title v-text="chatf.name"></v-list-item-title>
           <v-list-item-subtitle
-            v-text="(chatf.lastMessage.user_id === chatf.currentUserId ? 'Вы: ' : '') + chatf.lastMessage.text"></v-list-item-subtitle>
+            v-text="chatf.lastMessageText"></v-list-item-subtitle>
         </v-col>
         <v-btn icon>
           <v-icon color="blue">mdi-message</v-icon>
@@ -38,23 +38,37 @@
       chat: { type: Object, required: true }
     },
     computed: {
+      link() {
+        if (this.chat.conversation) return '/messages/c' + this.chat.id
+        else {
+          return '/messages/' + this.user.id
+        }
+      },
       chatf() {
         const chat = this.chat
-
-        const currentUserId = this.$store.getters['user/GET_USER'].id
         const user =
           chat &&
           chat.users.filter(
-            e => e.id !== currentUserId
+            e => e.id !== this.$store.getters['user/GET_USER'].id
           )[0]
+
+        const currentUserId = this.$store.getters['user/GET_USER'].id
 
         const lastMessage =
           chat.messages && chat.messages.length > 0
             ? chat.messages[chat.messages.length - 1]
             : null
 
+        const adminMark =
+          user && typeof user.admin_role_id === 'number' ? true : null
+
         return {
+          adminMark,
           avatar: {
+            admin_role_id:
+              !chat.conversation &&
+              typeof user.admin_role_id === 'number' &&
+              user.admin_role_id,
             src: chat.conversation
               ? chat.image_src || null
               : user

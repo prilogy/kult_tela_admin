@@ -8,9 +8,9 @@ const storeActions = {
           ((state.currentChat && state.currentChat.id === chat.id) ||
             state.currentChat.user_id === chat.user_id)) ||
         forceCurrent === true
-      )
+      ) {
         commit('SET_CURRENT_CHAT', chat)
-      else commit('SET_CHAT', chat)
+      } else commit('SET_CHAT', chat)
     }
   },
   async FEED_CHATS({ commit }) {
@@ -23,10 +23,13 @@ const storeActions = {
   },
   async FEED_CHAT_WITH_USER_ID(
     { commit, dispatch },
-    { id, setAsCurrent = false }
+    { id, setAsCurrent = false, conversation = false }
   ) {
-    const { data: chat } = await this.$api.Chat.getById(id)
-    await dispatch('SET_CHAT', { chat, forceCurrent: setAsCurrent || false })
+    const chat = conversation
+      ? await this.$api.Chat.getConversationById(id)
+      : await this.$api.Chat.getById(id)
+
+    await dispatch('SET_CHAT', { chat: chat.data, forceCurrent: setAsCurrent || false })
   },
   SET_CURRENT_CHAT_FROM_CHATS({ state, commit }, user_id) {
     const index = getChatIndexById(state.chats, { user_id })

@@ -57,7 +57,7 @@ const sockets = {
       chat = state.chats[index]
     }
     if (chat) chat.last_seen_message_id = info.message_id
-    dispatch('SET_CHAT', { chat })
+    await dispatch('SET_CHAT', { chat })
   }
 }
 
