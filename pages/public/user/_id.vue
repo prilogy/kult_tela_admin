@@ -23,7 +23,6 @@
         <WorkoutInfo :user="user"></WorkoutInfo>
       </div>
     </div>
-
   </v-row>
 </template>
 

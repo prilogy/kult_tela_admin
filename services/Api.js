@@ -1,6 +1,10 @@
 export default function (ctx) {
   const axios = ctx.$axios
 
+  this.Admin = {
+    edit: data => axios.$post('/admin/edit', data)
+  }
+
   this.Auth = {
     signUp: data => axios.$post('/admin/auth/signup', data),
     login: user => axios.$post('/auth', user), // user = { email, password }
