@@ -3,7 +3,7 @@
     class="fill-height ma-0 pa-4"
   >
     <v-col class="pa-0">
-      <v-card>
+      <v-card class="main-card">
         <v-card-title class="headline">
           Добро пожаловать в панель управления Культ Тела!
         </v-card-title>
@@ -44,6 +44,10 @@
 
 
 <style scoped>
+  .main-card {
+    word-break: break-word;
+  }
+
   .grid-wrapper {
     flex: 1 0 auto;
     max-width: 100%;

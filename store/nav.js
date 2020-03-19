@@ -26,14 +26,14 @@ export const state = () => ({
       title: 'Статистика',
       to: '/statistics',
       roles: [0]
+    },
+    {
+      id: 4,
+      icon: 'mdi-qrcode',
+      title: 'Промокоды',
+      to: '/promo',
+      roles: [0]
     }
-    /*{
-      id: 0,
-      icon: 'mdi-account-group',
-      title: 'Мои ученики',
-      to: '/students',
-      roles: [2]
-    }*/
   ]
 })
 

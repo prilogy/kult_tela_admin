@@ -11,6 +11,12 @@ export default function (ctx) {
     tokenAuth: () => axios.$get('/auth'), // headers must contain token
   }
 
+  this.Promo = {
+    get: () => axios.$get('/admin/promo'),
+    create: (data) => axios.$post('/admin/promo', data),
+    remove: (data) => axios.$post('/admin/promo/delete', data)
+  }
+
   this.Chat = {
     getAll: () => axios.$get('/chat'),
     getById: id => axios.$get('/chat/' + id),
