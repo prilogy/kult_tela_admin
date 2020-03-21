@@ -12,7 +12,7 @@
       <div class="message__attachments" v-if="message.attachments">
         <img :src="item.src" v-for="item in message.attachments"/>
       </div>
-      <p class="message__date body-2 ma-0">{{message.time}}</p>
+      <p class="message__date body-2 ma-0">{{message.date.time}}</p>
     </v-col>
   </v-row>
 </template>

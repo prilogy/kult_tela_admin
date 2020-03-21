@@ -18,21 +18,21 @@ export const state = () => ({
       icon: 'mdi-format-float-left',
       title: 'Заявки',
       to: '/requests',
-      roles: [0]
+      roles: [-1, 0]
     },
     {
       id: 3,
       icon: 'mdi-chart-timeline-variant',
       title: 'Статистика',
       to: '/statistics',
-      roles: [0]
+      roles: [-1]
     },
     {
       id: 4,
       icon: 'mdi-qrcode',
       title: 'Промокоды',
       to: '/promo',
-      roles: [0]
+      roles: [-1]
     }
   ]
 })

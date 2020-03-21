@@ -78,6 +78,7 @@
 
 <script>
   export default {
+    middleware: 'protectRole',
     data() {
       return {
         switcher: 'new',

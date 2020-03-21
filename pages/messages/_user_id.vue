@@ -34,11 +34,23 @@
             </v-row>
 
           </li>
-          <template v-for="message in CHAT.messages">
+          <template v-for="(message, index) in CHAT.messages">
             <li>
               <MessageBox :user="CHAT.users.filter(e => e.id === message.user_id)[0]"
                           :conversation="CHAT.conversation || false" :message="message">
               </MessageBox>
+              <div
+                class="messages__date mx-n2 px-2"
+                v-if="
+            CHAT.messages[index + 1] &&
+              CHAT.messages[index].date.date !==
+                CHAT.messages[index + 1].date.date
+          "
+              >
+                <p class="font-weight-bold grey--text text--darken-2">
+                  {{ getAlias(CHAT.messages[index + 1].date.date) }}
+                </p>
+              </div>
             </li>
           </template>
         </ul>
@@ -60,8 +72,10 @@
 <script>
   import { mapGetters } from 'vuex'
   import MessageBox from '../../components/pages/messages/MessageBox'
+  import dateFuncs from '../../mixins/dateFuncs'
 
   export default {
+    mixins: [dateFuncs],
     components: { MessageBox },
     data() {
       return {
@@ -199,6 +213,16 @@
 </script>
 
 <style scoped>
+  .messages__date {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .messages__date p {
+    font-weight: 500 !important;
+  }
+
   .chat-message {
     border-radius: 5px;
   }

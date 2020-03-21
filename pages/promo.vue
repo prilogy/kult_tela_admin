@@ -54,7 +54,11 @@
 </template>
 
 <script>
+  import dateFuncs from '../mixins/dateFuncs'
+
   export default {
+    mixins: [dateFuncs],
+    middleware: 'protectRole',
     data() {
       return {
         code: '',
@@ -98,33 +102,6 @@
       }
     },
     methods: {
-      convertDate(UTCdate) {
-        const timestamp = new Date(UTCdate)
-        const month =
-          timestamp.getMonth() + 1 > 9
-            ? timestamp.getMonth() + 1
-            : '0' + (timestamp.getMonth() + 1).toString()
-
-        const day =
-          timestamp.getDate() > 9
-            ? timestamp.getDate()
-            : '0' + timestamp.getDate().toString()
-
-        const hours =
-          timestamp.getHours() > 9
-            ? timestamp.getHours()
-            : '0' + timestamp.getHours().toString()
-
-        const mins =
-          timestamp.getMinutes() > 9
-            ? timestamp.getMinutes()
-            : '0' + timestamp.getMinutes().toString()
-        return {
-          timestamp,
-          date: day + '.' + month + '.' + timestamp.getFullYear(),
-          time: hours + ':' + mins
-        }
-      },
       async addCode() {
         if (this.validate) {
           const data = {

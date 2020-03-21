@@ -5,7 +5,7 @@
       <v-text-field v-model="first_name" label="Имя"></v-text-field>
       <v-text-field v-model="last_name" label="Фамилия"></v-text-field>
       <v-textarea rows="1" auto-grow v-model="admin_description" label="Описание"></v-textarea>
-      <div v-if="!avatar_src" class="mb-2">
+      <div v-if="!avatar_src && current_avatar_src" class="mb-2">
         <p class="grey--text text--darken-1">Текущий аватар</p>
         <v-img width="100%" contain max-height="300" :src="current_avatar_src"></v-img>
       </div>

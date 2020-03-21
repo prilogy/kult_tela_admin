@@ -41,6 +41,7 @@
 
 <script>
   export default {
+    middleware: 'protectRole',
     data() {
       return {
         info: null,
