@@ -2,7 +2,7 @@
   <v-list-item
     v-if="chatf"
     :to="link"
-    :class="{'blue lighten-4': chatf.lastMessage.user_id !== chatf.currentUserId && chat.last_seen_message_id < chatf.lastMessage.id}"
+    :class="{'blue lighten-4': chatf.lastMessage && chatf.lastMessage.user_id !== chatf.currentUserId && chat.last_seen_message_id < chatf.lastMessage.id}"
   >
     <v-tooltip top>
       <template v-slot:activator="{ on }">

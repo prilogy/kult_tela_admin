@@ -80,6 +80,7 @@
     max-width: 100%;
     border-radius: 5px;
     margin-top: 5px;
+    max-height: 400px;
   }
 
 </style>
