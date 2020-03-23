@@ -27,51 +27,59 @@
 </template>
 
 <script>
-  import { WeightHistory, FoodReports, WorkoutInfo } from '../../../components/pages/public/user'
+  import { WeightHistory, FoodReports, WorkoutInfo } from "../../../components/pages/public/user";
+  import dateFuncs from "../../../mixins/dateFuncs";
 
   export default {
+    mixins: [dateFuncs],
     components: { FoodReports, WeightHistory, WorkoutInfo },
     data() {
       return {
         user: null
-      }
+      };
     },
     methods: {},
     computed: {
       userInfo() {
-        const user = this.user
+        const user = this.user;
         if (user) {
-          const weight_diff = Math.ceil(user.weight_diff * 10) / 10 || 0
+          const weight_diff = Math.ceil(user.weight_diff * 10) / 10 || 0;
           return [
-            { title: 'Начальный вес', value: user.weight_start + ' кг' },
+            { title: "email", value: user.email },
+            { title: "Начальный вес", value: user.weight_start + " кг" },
             {
-              title: 'Текущий вес',
+              title: "Текущий вес",
               value: `${user.weight_start - weight_diff}${
-                weight_diff > 0 ? '(-' + weight_diff + ')' : ''
+                weight_diff > 0 ? "(-" + weight_diff + ")" : ""
               } кг`
             },
             {
-              title: 'Рост',
-              value: user.height + ' см'
+              title: "Рост",
+              value: user.height + " см"
             },
-            { title: 'Дата регистрации', value: user.date_signup },
-            { title: 'План', value: user.plan_name }
-          ]
+            { title: "Возраст", value: user.age },
+            { title: "Дата регистрации", value: this.convertDate(user.date_signup).date },
+            { title: "Окончание подписки", value: this.convertDate(user.subscription_exp).date },
+            { title: "План", value: user.plan_name },
+            { title: "Звание", value: user.rank },
+            { title: "ID наставника", value: user.tutor_id || "Нет" },
+            { title: "ID меню питания", value: user.food_menu_id || "Нет" }
+          ];
         }
-        return []
+        return [];
       }
     },
     async asyncData({ params, redirect, app }) {
       try {
-        const { data: user } = await app.$api.Public.getUserById(params.id)
-        return { user }
+        const { data: user } = await app.$api.Public.getUserById(params.id);
+        return { user };
       } catch (e) {
-        app.$notifier.showMessage({ message: 'Пользователь не существует', type: 'error' })
-        redirect('/')
+        app.$notifier.showMessage({ message: "Пользователь не существует", type: "error" });
+        redirect("/");
       }
 
     }
-  }
+  };
 </script>
 
 <style scoped>
