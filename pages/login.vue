@@ -20,7 +20,7 @@
               dark
               flat
             >
-              <v-toolbar-title>{{signUp ? 'Регистрация' : 'Вход'}}</v-toolbar-title>
+              <v-toolbar-title>{{signUp ? "Регистрация" : "Вход"}}</v-toolbar-title>
             </v-toolbar>
             <v-card-text>
               <v-form ref="form" v-model="valid" @submit="sendData">
@@ -93,7 +93,7 @@
               </v-form>
             </v-card-text>
             <v-card-actions>
-              <v-btn @click="switchWindow">{{signUp ? 'Войти' : 'Зарегистрироваться'}}</v-btn>
+              <v-btn @click="switchWindow">{{signUp ? "Войти" : "Зарегистрироваться"}}</v-btn>
               <v-spacer/>
               <v-btn @click="validateForm" :disabled="!valid" color="primary">{{signUp ? "Подтвердить регистрацию" :
                 "Войти"}}
@@ -108,82 +108,80 @@
 
 <script>
   export default {
-    layout: 'noAuth',
+    layout: "noAuth",
     data: () => ({
-      first_name: '',
-      last_name: '',
-      email: '',
-      password: '',
-      secret: '',
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+      secret: "",
       signUp: false,
       valid: null,
-      role: '',
-      description: '',
+      role: "",
+      description: "",
       avatar_src: null,
       roles: [],
       emailRules: [
-        v => !!v || 'email обязателен',
-        v => /.+@.+\..+/.test(v) || 'Неправильный email',
+        v => !!v || "email обязателен",
+        v => /.+@.+\..+/.test(v) || "Неправильный email"
       ],
       passwordRules: [
-        v => !!v || 'Пароль обязателен',
-        v => v.length > 5 || 'Минимум 6 символов'
+        v => !!v || "Пароль обязателен",
+        v => v.length > 5 || "Минимум 6 символов"
       ],
       textRules: [
-        v => !!v || 'Поле обязательно'
+        v => !!v || "Поле обязательно"
       ],
       showPassword: false
     }),
     methods: {
       async sendData() {
 
-        let result
+        let result;
 
         let data = {
           email: this.email,
           password: this.password
-        }
+        };
         if (this.signUp) {
-          console.log('asdas')
-          data.first_name = this.first_name
-          data.last_name = this.last_name
-          data.role_id = this.roles.filter(e => e.name === this.role)[0].value
-          data.secret = this.secret
-          data.description = this.description
+          data.first_name = this.first_name;
+          data.last_name = this.last_name;
+          data.role_id = this.roles.filter(e => e.name === this.role)[0].value;
+          data.secret = this.secret;
+          data.description = this.description;
 
-          const form = new FormData()
+          const form = new FormData();
           Object.keys(data).forEach(key => {
-            form.append(key, data[key])
-          })
-          form.append('avatar_src', this.avatar_src)
+            form.append(key, data[key]);
+          });
+          form.append("avatar_src", this.avatar_src);
 
-          console.log(form)
 
-          result = await this.$api.Auth.signUp(form)
-          this.$notifier.showMessage({ message: result.data, type: 'success' })
-          this.switchWindow()
+          result = await this.$api.Auth.signUp(form);
+          this.$notifier.showMessage({ message: result.data, type: "success" });
+          this.switchWindow();
         } else {
-          await this.$store.dispatch('auth/LOGIN', data)
+          await this.$store.dispatch("auth/LOGIN", data);
         }
       },
       validateForm() {
         if (this.$refs.form.validate()) {
-          this.sendData()
+          this.sendData();
         }
       },
       switchWindow() {
-        this.signUp = !this.signUp
+        this.signUp = !this.signUp;
         if (this.signUp === true)
-          this.password = ''
+          this.password = "";
       }
     },
     async asyncData(ctx) {
       try {
-        const { data: roles } = await ctx.app.$api.Roles.getAll()
-        return { roles }
+        const { data: roles } = await ctx.app.$api.Roles.getAll();
+        return { roles };
       } catch (e) {
-        this.$notifier.showMessage({ type: 'error', message: 'Ошибка загрузки данных' })
+        this.$notifier.showMessage({ type: "error", message: "Ошибка загрузки данных" });
       }
     }
-  }
+  };
 </script>

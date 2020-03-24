@@ -43,6 +43,7 @@
       userInfo() {
         const user = this.user;
         if (user) {
+
           const weight_diff = Math.ceil(user.weight_diff * 10) / 10 || 0;
           return [
             { title: "email", value: user.email },
