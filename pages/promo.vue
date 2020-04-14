@@ -3,6 +3,7 @@
     <p class="ma-0 mb-1 pa-0 grey--text text--darken-2">Добавить промокод</p>
     <v-row class="mx-0" align="center">
       <v-text-field v-model="code" class="code-input" label="Промокод"></v-text-field>
+      <v-text-field class="ml-3" v-model="subscription_duration" label="Длительность подписки"></v-text-field>
       <v-select class="ml-3" label="Пакет" :items="plans.map(e => e.name)" v-model="plan"></v-select>
       <v-checkbox class="ml-3" label="Многразовый" v-model="infinite"></v-checkbox>
     </v-row>
@@ -31,7 +32,7 @@
       </template>
 
       <template v-slot:item.infinite="{ item }">
-        <v-icon>mdi-{{!item.infinite ? 'minus-box' : 'checkbox-marked'}}</v-icon>
+        <v-icon>mdi-{{!item.infinite ? "minus-box" : "checkbox-marked"}}</v-icon>
       </template>
 
       <template v-slot:item.plan_id="{ item }">
@@ -54,52 +55,59 @@
 </template>
 
 <script>
-  import dateFuncs from '../mixins/dateFuncs'
+  import dateFuncs from "../mixins/dateFuncs";
 
   export default {
     mixins: [dateFuncs],
-    middleware: 'protectRole',
+    middleware: "protectRole",
     data() {
       return {
-        code: '',
+        code: "",
+        subscription_duration: 31,
         infinite: false,
         plan: null,
         codes: [],
         plans: [],
-        search: '',
+        search: "",
         headers: [
           {
-            text: 'Код',
-            align: 'left',
+            text: "Код",
+            align: "left",
             sortable: true,
-            value: 'key'
+            value: "key"
           },
           {
-            text: 'Многоразовый',
-            align: 'left',
+            text: "Многоразовый",
+            align: "left",
             sortable: true,
-            value: 'infinite'
+            value: "infinite"
           },
           {
-            text: 'Пакет',
-            align: 'left',
+            text: "Длительность подписки",
+            align: "left",
             sortable: true,
-            value: 'plan_id'
+            value: "subscription_duration"
           },
           {
-            text: 'Дата создания',
-            align: 'left',
+            text: "Пакет",
+            align: "left",
             sortable: true,
-            value: 'date'
+            value: "plan_id"
           },
           {
-            text: 'Действия',
-            align: 'center',
+            text: "Дата создания",
+            align: "left",
+            sortable: true,
+            value: "date"
+          },
+          {
+            text: "Действия",
+            align: "center",
             sortable: false,
-            value: 'action'
+            value: "action"
           }
         ]
-      }
+      };
     },
     methods: {
       async addCode() {
@@ -107,29 +115,30 @@
           const data = {
             key: this.code,
             infinite: this.infinite,
-            plan_id: this.plans.filter(e => e.name === this.plan)[0].id
-          }
+            plan_id: this.plans.filter(e => e.name === this.plan)[0].id,
+            subscription_duration: this.subscription_duration
+          };
           try {
-            const r = await this.$api.Promo.create(data)
+            const r = await this.$api.Promo.create(data);
             if (r.success) {
-              this.codes = [...this.codes, r.data]
-              this.code = ''
-              this.infinite = false
-              this.plan = null
+              this.codes = [...this.codes, r.data];
+              this.code = "";
+              this.infinite = false;
+              this.plan = null;
             }
-            this.$notifier.showMessage({ message: 'Промокод успешно создан' })
+            this.$notifier.showMessage({ message: "Промокод успешно создан" });
           } catch (e) {
 
           }
         }
       },
       async deleteCode(item) {
-        let r = confirm(`Вы действительно хотите удалить промокод?`)
+        let r = confirm(`Вы действительно хотите удалить промокод?`);
         if (r === true) {
           try {
-            const r = await this.$api.Promo.remove({ id: item.id })
+            const r = await this.$api.Promo.remove({ id: item.id });
             if (r.success) {
-              this.codes = this.codes.filter(e => e.id !== item.id)
+              this.codes = this.codes.filter(e => e.id !== item.id);
             }
           } catch
             (e) {
@@ -139,17 +148,17 @@
     },
     computed: {
       validate() {
-        return this.code && this.plan
+        return this.code && this.plan;
       }
     },
     async asyncData(ctx) {
       try {
-        const { data } = await ctx.app.$api.Promo.get()
-        return { codes: data.codes, plans: data.plans }
+        const { data } = await ctx.app.$api.Promo.get();
+        return { codes: data.codes, plans: data.plans };
       } catch (e) {
-        ctx.app.$notifier.showMessage({ type: 'error', message: 'Ошибка загрузки данных' })
+        ctx.app.$notifier.showMessage({ type: "error", message: "Ошибка загрузки данных" });
       }
     }
-  }
+  };
 </script>
 
